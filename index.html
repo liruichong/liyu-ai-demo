@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>礼遇 LiYu · 送礼 AI 助手</title>
+<link rel="stylesheet" href="style.css?v=157">
+</head>
+<body>
+<div class="stage">
+  <!-- 顶部：品牌 + 视图切换 -->
+  <header class="demo-header">
+    <div class="brand">
+      <img class="brand-logo" src="assets/logo-liyu.png" alt="礼遇">
+      <span class="brand-slogan">给对的人，送到心坎里</span>
+    </div>
+    <div class="view-switch" id="viewSwitch">
+      <button class="vs-btn active" data-view="app">App 原型</button>
+      <button class="vs-btn" data-view="prd">产品方案</button>
+    </div>
+  </header>
+
+  <!-- ============ 视图一：可交互 App 原型 ============ -->
+  <div class="view active" id="view-app">
+    <div class="phone" id="phone">
+      <!-- App 内容 -->
+      <div class="app" id="app">
+
+        <!-- ===== Tab1 首页 ===== -->
+        <section class="page active" id="page-home">
+          <!-- 顶部：品牌 logo + 搜索框 -->
+          <div class="home-topbar">
+            <img class="ht-logo" src="assets/logo-liyu.png" alt="礼遇" data-act="showOnboard" role="button" aria-label="关于礼遇">
+            <div class="ht-search">
+              <input id="homeSearch" type="text" placeholder="搜索收礼人，如「小雨」「妈妈」">
+              <button data-act="homeSearchBtn" aria-label="搜索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="M20.5 20.5l-4.8-4.8"/></svg></button>
+            </div>
+          </div>
+          <div class="home-search-result" id="homeSearchResult"></div>
+
+          <!-- ① 为 TA 送礼 Hero（放大 + 礼物 emoji 占位） -->
+          <div class="gift-hero" id="giftHero">
+            <div class="gh-gift"><img src="assets/hero-main.png?v=65" alt="礼物插画"></div>
+            <div class="gh-actions">
+              <button class="gh-btn primary" data-act="heroStart"><span class="gh-sparkle" aria-hidden="true"></span><span class="gh-txt">开始选礼</span></button>
+              <button class="gh-btn ghost" data-act="giftMall">逛逛商城</button>
+            </div>
+          </div>
+
+          <!-- ② 功能二级入口 -->
+          <div class="feature-grid">
+            <div class="feature-item" data-act="goRelations"><span class="fi"><img src="assets/icon-people.png?v=64" alt="人物关系"></span><span class="ft">人物关系</span></div>
+            <div class="feature-item" data-act="goCalendar"><span class="fi"><img src="assets/icon-calendar.png?v=64" alt="送礼日历"></span><span class="ft">送礼日历</span></div>
+            <div class="feature-item" data-act="goReciprocity"><span class="fi"><img src="assets/icon-gift.png?v=64" alt="礼尚往来"></span><span class="ft">礼尚往来</span></div>
+            <div class="feature-item" data-act="goCard"><span class="fi"><img src="assets/icon-card.png?v=64" alt="心意贺卡"></span><span class="ft">心意贺卡</span></div>
+          </div>
+
+          <!-- ②.5 惊喜盲盒 -->
+          <div class="blindbox-strip" data-act="goBlindbox">
+            <span class="bb-emoji"><img src="assets/icon-blindbox.png?v=2" alt="惊喜盲盒"></span>
+            <div class="bb-txt"><b>惊喜盲盒</b><span>开一个，送给 TA 的小惊喜</span></div>
+            <span class="bb-arrow">›</span>
+          </div>
+
+          <!-- ③ 日期日历（送礼日倒计时 · 左右自动滑动） -->
+          <div class="home-section-title"><span>临近送礼日</span></div>
+          <div class="mini-cal" id="miniCalScroll"></div>
+        </section>
+
+        <!-- ===== Tab2 发现 ===== -->
+        <section class="page" id="page-discover">
+          <!-- ① 搜索栏（最上） -->
+          <div class="mall-search top">
+            <input id="mallSearch" type="text" placeholder="搜索礼物，如「香薰」「围巾」">
+            <button data-act="mallSearch" aria-label="搜索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="M20.5 20.5l-4.8-4.8"/></svg></button>
+          </div>
+
+          <!-- ② 分类导航（为谁挑 / 为何送 · 左右切页） -->
+          <div class="cat-pager">
+            <div class="cat-tabs">
+              <button class="cat-tab active" data-catpage="0">为谁挑</button>
+              <button class="cat-tab" data-catpage="1">为何送</button>
+            </div>
+            <div class="cat-viewport">
+              <div class="cat-pages" id="catPages">
+                <div class="cat-page" id="catPeople"></div>
+                <div class="cat-page" id="catScene"></div>
+              </div>
+            </div>
+            <div class="cat-more-row">
+              <button class="cat-more-btn" id="catToggleBtn" data-act="catToggle">展开全部 ▾</button>
+            </div>
+          </div>
+
+          <!-- ③ 活动 banner（占一行 · 自动轮播） -->
+          <div class="act-banner" id="actBanner"></div>
+
+          <!-- ④ 攻略卡片（左右滑动） -->
+          <div class="home-section-title"><span>送礼攻略</span></div>
+          <div class="guide-scroll" id="guideScroll"></div>
+
+          <!-- ⑤ 商城 -->
+          <div class="home-section-title"><span>心选礼物</span></div>
+          <div class="mall" id="mallGrid"></div>
+          <button class="mall-more" id="mallMore" data-act="mallMore">加载更多</button>
+        </section>
+
+        <!-- ===== Tab3 心愿 ===== -->
+        <section class="page" id="page-wish">
+          <div class="mall-search top">
+            <input id="wishSearch" type="text" placeholder="搜索心愿，如「香薰」「围巾」">
+            <button data-act="wishSearchBtn" aria-label="搜索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="M20.5 20.5l-4.8-4.8"/></svg></button>
+          </div>
+          <div class="wish-tabs">
+            <button class="insp-tab active" data-insp="wish">💝 心愿池</button>
+            <button class="insp-tab" data-insp="history">🕒 历史送过</button>
+          </div>
+          <div class="wish-body" id="wishBody"></div>
+        </section>
+
+        <!-- ===== Tab4 我的 ===== -->
+        <section class="page" id="page-me">
+          <div class="me-card">
+            <div class="me-avatar">🍊</div>
+            <div>
+              <p class="me-name">小林</p>
+              <p class="me-meta">已用心送出 <b>12</b> 份礼物</p>
+            </div>
+          </div>
+          <div class="me-stats">
+            <div><b>12</b><span>累计送出</span></div>
+            <div><b>3</b><span>本月送出</span></div>
+            <div><b>68%</b><span>送对率↑</span></div>
+          </div>
+          <div class="me-groups" id="meGroups"></div>
+        </section>
+
+        <!-- ===== 人物关系（二级） ===== -->
+        <section class="page overlay" id="page-relations">
+          <div class="rel-top">
+            <button class="back" data-act="backHome">‹</button>
+            <div class="sub-title">人物关系</div>
+            <span class="rel-count" id="relCount"></span>
+          </div>
+          <div class="rel-search">
+            <input id="relSearch" type="text" placeholder="搜索姓名 / 关系">
+          </div>
+          <div class="rel-net" id="relNet"></div>
+          <div class="rel-add" data-act="addContact">
+            <span class="rel-add-plus">＋</span>
+            <div class="rel-add-info">
+              <b>添加收礼人</b>
+              <span>记下 TA 的喜好与雷区，让推荐更懂 TA</span>
+            </div>
+            <span class="rel-add-arrow">›</span>
+          </div>
+          <div class="rel-body">
+            <div class="rel-list" id="relList"></div>
+            <div class="rel-nav" id="relNav"></div>
+          </div>
+        </section>
+
+        <!-- ===== 送礼日历（二级） ===== -->
+        <section class="page overlay" id="page-calendar">
+          <div class="sub-head">
+            <button class="back" data-act="backHome">‹</button>
+            <div class="sub-title">送礼日历</div>
+            <button class="sub-add" data-act="addEvent">＋ 添加送礼日</button>
+          </div>
+          <div class="cal-search">
+            <input id="calSearch" type="text" placeholder="搜索送礼日 / 收礼人（如「小雨」「生日」）">
+            <button data-act="calSearchBtn" aria-label="搜索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="M20.5 20.5l-4.8-4.8"/></svg></button>
+          </div>
+          <div class="ev-form" id="evForm"></div>
+          <div class="cal-head">
+            <button class="cal-nav" data-act="calPrev">‹</button>
+            <div class="cal-title" id="calTitle">2026 年 10 月</div>
+            <button class="cal-nav" data-act="calNext">›</button>
+          </div>
+          <div class="cal-weekdays">
+            <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+          </div>
+          <div class="cal-grid" id="calGrid"></div>
+          <div class="cal-events" id="calEvents">
+            <p class="cal-events-title">近期送礼日</p>
+            <div id="calEventList"></div>
+          </div>
+        </section>
+
+        <!-- ===== 分类二级页（搜索 / 攻略 / 商城） ===== -->
+        <section class="page overlay" id="page-category">
+          <div class="sub-head">
+            <button class="back" data-act="backDiscover">‹</button>
+            <div class="sub-title" id="catTitle">送礼对象</div>
+            <span class="sub-tag" id="catTag">给谁送</span>
+          </div>
+          <div class="cat-body">
+            <!-- 搜索框 -->
+            <div class="mall-search top">
+              <input id="catSearch" type="text" placeholder="搜索礼物，如「香薰」「围巾」">
+              <button data-act="catSearchBtn" aria-label="搜索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="M20.5 20.5l-4.8-4.8"/></svg></button>
+            </div>
+            <!-- 送礼攻略 -->
+            <div class="home-section-title"><span>送礼攻略</span></div>
+            <div class="guide-scroll" id="catGuideScroll"></div>
+            <!-- 礼物商城 -->
+            <div class="home-section-title"><span>礼物商城</span></div>
+            <div class="mall" id="catMallGrid"></div>
+            <button class="mall-more" id="catMallMore" data-act="catMallMore">加载更多</button>
+          </div>
+        </section>
+
+        <!-- ===== 收礼人详情页（覆盖层） ===== -->
+        <section class="page overlay" id="page-detail">
+          <div class="detail-hero">
+            <button class="back" data-act="backHome">‹</button>
+            <div class="detail-avatar" id="dAvatar">🌸</div>
+            <h2 class="detail-name" id="dName">小雨</h2>
+            <p class="detail-relation" id="dRelation">女朋友</p>
+            <div class="detail-actions">
+              <span data-act="edit">编辑</span>
+              <span data-act="share">分享</span>
+              <span data-act="more">···</span>
+            </div>
+          </div>
+          <div class="detail-scroll" id="detailScroll"></div>
+          <div class="detail-cta">
+            <button class="btn-primary" data-act="pickGift">为 TA 选礼</button>
+          </div>
+        </section>
+
+        <!-- ===== 选礼流（全屏模态） ===== -->
+        <section class="page overlay" id="page-giftflow">
+          <div class="gf-inner" id="gfInner"></div>
+        </section>
+
+        <!-- ===== 添加收礼人（对话式模态） ===== -->
+        <section class="page overlay" id="page-addcontact">
+          <div class="ac-inner" id="acInner"></div>
+        </section>
+
+        <!-- ===== 礼尚往来（二级） ===== -->
+        <section class="page overlay" id="page-reciprocity">
+          <div class="sub-head">
+            <button class="back" data-act="backHome">‹</button>
+            <div class="sub-title">礼尚往来</div>
+            <button class="sub-add" data-act="ledgerAdd">＋ 快记</button>
+          </div>
+          <div class="ledger-hero">
+            <p class="ltag">有来有往，心意不散</p>
+            <div class="ledger-stats">
+              <div><b id="stSent">0</b><span>已送出</span></div>
+              <div><b id="stRecv">0</b><span>已收到</span></div>
+              <div><b id="stDue">0</b><span>待回心意</span></div>
+            </div>
+          </div>
+          <div class="home-section-title"><span>回礼提醒</span></div>
+          <div class="marquee top" id="returnMarquee"></div>
+          <div class="ledger-tabs">
+            <button class="insp-tab active" data-ledger="received">我收到的</button>
+            <button class="insp-tab" data-ledger="sent">我送出的</button>
+          </div>
+          <input class="ledger-search" id="ledgerSearch" type="text" placeholder="搜索送礼 / 收礼记录（人名 / 礼物）">
+          <div class="ledger-list" id="ledgerList"></div>
+        </section>
+
+        <!-- ===== 心意贺卡（二级） ===== -->
+        <section class="page overlay" id="page-card">
+          <div class="sub-head">
+            <button class="back" data-act="backHome">‹</button>
+            <div class="sub-title">心意贺卡</div>
+            <button class="sub-history" data-act="cardHistory" aria-label="历史记录">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 3"/></svg>
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="home-section-title"><span>送给谁</span></div>
+            <div class="card-contacts" id="cardContacts"></div>
+            <div class="home-section-title"><span>选一张卡</span></div>
+            <div class="card-styles" id="cardStyles"></div>
+            <div class="card-preview" id="cardPreview"></div>
+            <div class="home-section-title"><span>写句话</span></div>
+            <div class="card-word">
+              <textarea id="cardWord" placeholder="写不出口？点「帮我想」让 AI 起个走心的头…"></textarea>
+              <div class="card-word-actions">
+                <button class="card-icon-btn" data-act="cardGen" aria-label="帮我想">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </button>
+                <button class="card-icon-btn" data-act="cardCopy" aria-label="复制">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                </button>
+              </div>
+            </div>
+            <button class="btn-primary card-export" data-act="cardExport">📸 导出贺卡</button>
+          </div>
+        </section>
+
+        <!-- ===== 惊喜盲盒（二级） ===== -->
+        <section class="page overlay" id="page-blindbox">
+          <div class="sub-head">
+            <button class="back" data-act="backHome">‹</button>
+            <div class="sub-title">惊喜盲盒</div>
+          </div>
+          <div class="blindbox-body">
+            <div class="bb-box" id="bbBox" data-act="bbOpen">
+              <div class="bb-emoji">🎁</div>
+            </div>
+            <p class="bb-hint">点一下盲盒，开出一个小惊喜</p>
+            <div class="bb-result" id="bbResult"></div>
+            <button class="btn-primary" data-act="bbOpen">再开一个</button>
+          </div>
+        </section>
+
+        <!-- ===== AI 助手（对话） ===== -->
+        <section class="page overlay" id="page-ai">
+          <div class="ai-head">
+            <button class="ac-back" data-act="aiClose">‹</button>
+            <img class="ai-avatar" src="assets/robot-lili.png" alt="礼礼">
+            <div class="ai-title">礼礼 <span class="ai-sub">AI 送礼参谋</span> <span class="ai-online">在线</span></div>
+          </div>
+          <div class="ai-chat" id="aiChat"></div>
+          <div class="ai-input">
+            <input id="aiInput" placeholder="问问 TA 该送什么…">
+            <button data-act="aiSend">发送</button>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- 底部 Tab 栏 -->
+      <nav class="tabbar" id="tabbar">
+        <button class="tab active" data-tab="home"><span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg></span>首页</button>
+        <button class="tab" data-tab="discover"><span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M16 8l-2.2 5.8L8 16l2.2-5.8z"/></svg></span>发现</button>
+        <button class="tab ai-fab" data-tab="ai"><span class="afab"><svg viewBox="0 0 48 48" fill="none"><path d="M24 2 L26.5 9.5 L34 12 L26.5 14.5 L24 22 L21.5 14.5 L14 12 L21.5 9.5 Z" fill="#fff"/><rect x="12" y="32" width="24" height="11" rx="3" fill="#fff"/><rect x="10" y="24" width="28" height="8" rx="2.5" fill="#fff"/><rect x="21.8" y="24" width="4.4" height="19" fill="#ee3c38"/></svg></span></button>
+        <button class="tab" data-tab="wish"><span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21C7 16.5 3 13 3 8.5 3 6 5 4 7.5 4c1.6 0 3.2.9 4.5 2.7C13.3 4.9 14.9 4 16.5 4 19 4 21 6 21 8.5c0 4.5-4 8-9 12.5z"/></svg></span>心愿</button>
+        <button class="tab" data-tab="me"><span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg></span>我的</button>
+      </nav>
+
+      <!-- ===== 首次进入新手引导 ===== -->
+      <div class="onboard" id="onboard">
+        <div class="ob-mask"></div>
+        <div class="ob-card">
+          <div class="ob-head">
+            <span class="ob-brand">🎁 欢迎来到礼遇</span>
+            <button class="ob-skip" id="obSkip">跳过</button>
+          </div>
+          <div class="ob-slides" id="obSlides"></div>
+          <div class="ob-dots" id="obDots"></div>
+          <div class="ob-foot">
+            <button class="ob-btn" id="obNext">下一步</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- ============ 视图二：产品方案（PRD） ============ -->
+  <div class="view" id="view-prd">
+    <div class="prd">
+      <h1>礼遇 LiYu · 产品方案</h1>
+      <p class="prd-lead">送礼 AI 助手 —— 认识你想送的人，记得你送过的心意，在对的日子把礼物送到心坎里。</p>
+
+      <!-- 00 项目背景 -->
+      <h2>00 · 项目背景</h2>
+      <div class="prd-card">
+        <ul>
+          <li><b>缘起</b>：送礼是高频刚需，但「选什么、送给谁、怎么写话」长期靠临时搜、靠人肉记，没人帮用户把「那个人」记牢、把话说到位。</li>
+          <li><b>机会</b>：内容电商（小红书）已把「种草 → 下单」跑通，但前面的「决策」环节——懂人、选对、说好——仍是空白，礼遇正是来补这一段。</li>
+          <li><b>定位</b>：纯推荐型送礼 AI 助手，帮用户「认识想送的人、选对礼物、说好心意、记住日子」，成交交给成熟电商，不碰供应链。</li>
+        </ul>
+      </div>
+
+      <!-- 01 痛点与问题 -->
+      <h2>01 · 痛点与问题</h2>
+      <div class="prd-grid">
+        <div class="prd-card">
+          <h3>不知道送什么</h3>
+          <p class="prd-p">对着搜索框不知道搜啥，刷 3 个 App、来回切 2 小时，还是拿不定主意。</p>
+        </div>
+        <div class="prd-card">
+          <h3>怕送错踩雷</h3>
+          <p class="prd-p">不记得对方的禁忌、过敏、雷区，花了钱反而不讨好、还尴尬。</p>
+        </div>
+        <div class="prd-card">
+          <h3>容易忘日子</h3>
+          <p class="prd-p">生日、纪念日、节日一忙就忘，只能临时抱佛脚、买贵的糊弄。</p>
+        </div>
+        <div class="prd-card">
+          <h3>不会说走心话</h3>
+          <p class="prd-p">礼物送出去了，却不知道写什么，心意打了折。</p>
+        </div>
+      </div>
+      <p class="prd-note">本质：送礼难在「懂人」，不在「找货」—— 商品随处可买，难的是把「这个人」看明白、把话说到位。</p>
+
+      <!-- 02 目标用户与用户洞察 -->
+      <h2>02 · 目标用户与用户洞察</h2>
+      <div class="data-signals">
+        <div class="data-sig"><span class="ds-tag">市场</span><p>中国礼赠市场是「万亿元级」生意，亲密 / 人情关系的礼赠高频、高复购，是最大基础盘。<em>（精确值以艾媒咨询等最新报告为准）</em></p></div>
+        <div class="data-sig"><span class="ds-tag">人群</span><p>20~35 岁是礼赠主力，决策特征是「怕错」大于「怕贵」，更愿为情绪价值付费。<em>（待引 QuestMobile / 艾瑞数据）</em></p></div>
+        <div class="data-sig"><span class="ds-tag">决策</span><p>记错日子、买错雷区、说不出走心话，是高频踩坑点，不是低频刚需。</p></div>
+        <div class="data-sig"><span class="ds-tag">转化</span><p>小红书已成年轻人「被种草 → 下单」的主要路径，礼赠天然契合内容种草。</p></div>
+      </div>
+      <div class="insight-banner">
+        <b>核心洞察</b>
+        <p>送礼是「关系维护」行为，决策成本在「懂人」不在「找货」。商品处处可买，难的是把这个人看明白、把话说到位。</p>
+      </div>
+
+      <p class="prd-note" style="margin-top:14px">核心用户 A —— 亲密 / 人情送礼者（20~35 岁），向下细分 4 类人群（性别 / 年龄为公开趋势归纳，精确占比待引权威报告）：</p>
+      <div class="prd-grid">
+        <div class="prd-card">
+          <h3>🩷 A1 · 热恋 / 新婚情侣</h3>
+          <ul>
+            <li><b>性别构成</b>：男女均衡，女性略高（更愿张罗仪式感礼物）</li>
+            <li><b>年龄</b>：23~32 岁</li>
+            <li><b>人生阶段</b>：恋爱稳定期 / 新婚 0~5 年，一二线为主</li>
+            <li><b>人群属性</b>：重仪式感、情绪价值敏感、社交分享欲强</li>
+            <li><b>驱动</b>：证明爱与重视，建立仪式感</li>
+            <li><b>动机</b>：不想踩雷拉低关系，要「惊喜感 + 被懂」</li>
+            <li><b>时机/预算</b>：纪念日·生日·520·七夕；200~1000+ 弹性大</li>
+          </ul>
+        </div>
+        <div class="prd-card">
+          <h3>🌷 A2 · 孝心儿女</h3>
+          <ul>
+            <li><b>性别构成</b>：女性为主（女儿更愿为父母花心思）</li>
+            <li><b>年龄</b>：25~35 岁</li>
+            <li><b>人生阶段</b>：职场成长期，父母渐入退休 / 银发期，跨线级、异地打拼多</li>
+            <li><b>人群属性</b>：愧疚感驱动的「情绪型尽孝」，注重实用健康</li>
+            <li><b>驱动</b>：亏欠感与感恩，想让爸妈「享点好的」</li>
+            <li><b>动机</b>：长辈难选（不在意物质·忌口·健康），怕买错闲置</li>
+            <li><b>时机/预算</b>：生日·春节·中秋·父母节；200~1500 实用健康类</li>
+          </ul>
+        </div>
+        <div class="prd-card">
+          <h3>🎀 A3 · 闺蜜挚友</h3>
+          <ul>
+            <li><b>性别构成</b>：女性为主（闺蜜经济核心）</li>
+            <li><b>年龄</b>：20~30 岁</li>
+            <li><b>人生阶段</b>：求学 / 初入职场 / 异地发展，同学、同事、发小</li>
+            <li><b>人群属性</b>：圈层审美、颜控、「站队式」友谊认同、分享型消费</li>
+            <li><b>驱动</b>：友谊认同与「站队」，圈层审美</li>
+            <li><b>动机</b>：要「懂我」的颜控好物，拒绝「敷衍」</li>
+            <li><b>时机/预算</b>：生日·搬家·毕业·结婚；100~500 颜值情绪类</li>
+          </ul>
+        </div>
+        <div class="prd-card">
+          <h3>💘 A4 · 暧昧 / 追求期</h3>
+          <ul>
+            <li><b>性别构成</b>：男性居多（追求方多为男性）</li>
+            <li><b>年龄</b>：20~28 岁</li>
+            <li><b>人生阶段</b>：单身，暗恋 / 追求 / 表白前</li>
+            <li><b>人群属性</b>：分寸敏感、怕越界、需要「助攻话术」、低预算试探</li>
+            <li><b>驱动</b>：推进关系的冲动与分寸拿捏</li>
+            <li><b>动机</b>：既想表达又怕越界，需要分寸 + 表白话术</li>
+            <li><b>时机/预算</b>：心动瞬间·表白；100~300 分寸型小物</li>
+          </ul>
+        </div>
+      </div>
+      <div class="prd-card" style="margin-top:12px">
+        <h3>次级用户 B · 轻量人情往来</h3>
+        <ul>
+          <li><b>性别构成</b>：男女均衡</li>
+          <li><b>年龄</b>：25~40 岁</li>
+          <li><b>人生阶段</b>：职场中坚，有稳定社交圈，同事 / 客户 / 普通亲戚</li>
+          <li><b>人群属性</b>：处事得体、「不出错 > 出彩」、时间敏感</li>
+          <li><b>驱动</b>：人情世故的得体与省心</li>
+          <li><b>动机</b>：不出错、拿得出手、别花太多时间</li>
+          <li><b>时机/预算</b>：节日·答谢；100~500 标准礼盒 / 通用款</li>
+        </ul>
+      </div>
+      <p class="prd-note">商务 / 企业团购暂不覆盖，作为二期独立规划。</p>
+
+      <!-- 03 核心场景与核心需求 -->
+      <h2>03 · 核心场景与核心需求</h2>
+      <div class="scene-table">
+        <div class="scene-row head"><span>场景</span><span>典型对象</span><span>核心需求</span></div>
+        <div class="scene-row"><span class="sc-name">🎂 生日</span><span class="sc-who">父母 / 对象 / 挚友</span><span class="sc-need">记住日子 + 契合兴趣的礼物</span></div>
+        <div class="scene-row"><span class="sc-name">💞 纪念日</span><span class="sc-who">另一半</span><span class="sc-need">仪式感 + 别踩雷 + 走心话术</span></div>
+        <div class="scene-row"><span class="sc-name">🏮 节日</span><span class="sc-who">家人 / 长辈</span><span class="sc-need">得体、预算可控、多人批量</span></div>
+        <div class="scene-row"><span class="sc-name">🙏 道歉求和</span><span class="sc-who">另一半 / 朋友</span><span class="sc-need">分寸拿捏、避免二次踩雷</span></div>
+        <div class="scene-row"><span class="sc-name">🌿 探望关怀</span><span class="sc-who">朋友 / 同事</span><span class="sc-need">实用、不越界、送得安心</span></div>
+        <div class="scene-row"><span class="sc-name">✨ 日常惊喜 / 表白</span><span class="sc-who">另一半 / 心仪对象</span><span class="sc-need">情绪价值 + 纪念意义</span></div>
+      </div>
+
+      <!-- 04 用户流程 -->
+      <h2>04 · 用户流程</h2>
+      <div class="flow">
+        <div class="flow-step"><div class="flow-num">0</div><div class="flow-body"><b>新手引导</b><p>首次进入分三步引导：添加收礼人 → 体验送礼推荐 → 标记重要日子，可跳过、可重复查看。</p></div></div>
+        <div class="flow-step"><div class="flow-num">1</div><div class="flow-body"><b>建档案（认识 TA）</b><p>对话式添加收礼人，记关系、兴趣、禁忌、预算区间。</p></div></div>
+        <div class="flow-step"><div class="flow-num">2</div><div class="flow-body"><b>进入选礼</b><p>点「为 TA 选礼」，选场景 + 预算 + 风格偏好。</p></div></div>
+        <div class="flow-step"><div class="flow-num">3</div><div class="flow-body"><b>AI 出方案</b><p>规则引擎生成多个候选，附推荐理由 + 雷区提示。</p></div></div>
+        <div class="flow-step"><div class="flow-num">4</div><div class="flow-body"><b>看礼物 · 生成寄语</b><p>逐字生成走心话术，可一键复制。</p></div></div>
+        <div class="flow-step"><div class="flow-num">5</div><div class="flow-body"><b>跳转下单 · 记录反馈</b><p>跳小红书商城成交（主），淘宝 / 京东为辅，回来后记录「送了什么、对方反应」。</p></div></div>
+      </div>
+
+      <!-- 05 竞品分析 -->
+      <h2>05 · 竞品分析</h2>
+      <div class="prd-grid">
+        <div class="prd-card">
+          <h3>小红书（内容种草电商）</h3>
+          <ul>
+            <li><b>擅长</b>：内容种草、场景化激发购买欲、年轻心智强</li>
+            <li><b>缺失</b>：「逛着逛着想买」，不解决「送谁、送什么、怎么写话」</li>
+            <li><b>礼遇差异</b>：从「人」出发给决策；小红书是礼遇的成交主路径（竞合）</li>
+          </ul>
+        </div>
+        <div class="prd-card">
+          <h3>淘宝 / 京东（货架电商）</h3>
+          <ul>
+            <li><b>擅长</b>：商品全、履约快、比价透明</li>
+            <li><b>缺失</b>：「搜什么」是最大门槛，礼赠场景颗粒度粗</li>
+            <li><b>礼遇差异</b>：作为辅助成交渠道，礼遇承担「前置决策」</li>
+          </ul>
+        </div>
+        <div class="prd-card">
+          <h3>礼物说 / 生日管家</h3>
+          <ul>
+            <li><b>擅长</b>：节日提醒、愿望清单、日历</li>
+            <li><b>缺失</b>：推荐偏「礼物目录」，缺「懂这个人」的记忆与理由</li>
+            <li><b>礼遇差异</b>：把「关系档案」做成可复用资产，越用越准</li>
+          </ul>
+        </div>
+        <div class="prd-card">
+          <h3>通用 AI（豆包 / ChatGPT）</h3>
+          <ul>
+            <li><b>擅长</b>：出主意、写文案能力强</li>
+            <li><b>缺失</b>：不记人（每次重新交代）、不落地成交、缺领域约束</li>
+            <li><b>礼遇差异</b>：领域化 AI + 关系记忆 + 成交闭环</li>
+          </ul>
+        </div>
+      </div>
+      <div class="insight-banner">
+        <b>定位结论</b>
+        <p>礼遇的机会空位 = 把「关系记忆」做成资产，串起「懂人 → 选对 → 说好 → 记住 → 买对」的垂直闭环。以上四类竞品都不是这块的完整方案。</p>
+      </div>
+
+      <!-- 06 产品方案 -->
+      <h2>06 · 产品方案</h2>
+      <p class="prd-p">一句话：让送礼从「搜商品」变成「懂一个人」。</p>
+
+      <h3 style="margin:18px 0 6px">产品形态</h3>
+      <div class="prd-card">
+        <ul>
+          <li><b>形态</b>：移动端 H5 优先、单列滚动，首页即「送礼助手」，主路径 = 首页 → 选礼流 → 礼物详情 → 跳转成交。</li>
+          <li><b>一级结构</b>：底部「首页 / 发现 / [AI 助手·中凸] / 心愿 / 我的」；首页放大「为 TA 送礼」入口 + 功能宫格，发现合并「搜索 + 分类 + 活动 + 攻略 + 商城」。</li>
+          <li><b>纯推荐闭环</b>：只做「选对 + 说好 + 记住」，成交跳小红书商城（主）/ 淘宝京东（辅），不碰库存、履约、支付。</li>
+        </ul>
+      </div>
+
+      <div class="prd-card" style="margin-top:10px">
+        <h3>核心价值</h3>
+        <ul>
+          <li>把「人」变成可复用档案（关系 / 兴趣 / 禁忌 / 预算 / 送过什么），入口是「人」不是「货」</li>
+          <li>把「选礼」从目录筛选变成「由人出发的决策」：候选 + 理由 + 雷区</li>
+          <li>把「表达」做成产品能力：有分寸、不踩雷的寄语一键生成</li>
+          <li>把「记忆」做成复利资产：越用越懂、越用越省心</li>
+        </ul>
+      </div>
+
+      <h3 style="margin:18px 0 6px">核心功能模块（按承载用户价值，非按 Tab）</h3>
+      <div class="prd-grid">
+        <div class="prd-card">
+          <h3>认识 TA · 关系档案</h3>
+          <p class="prd-p">对话式录入关系、兴趣、禁忌、预算、重要日期；一人一档，成为后续一切推荐的「上下文」。</p>
+        </div>
+        <div class="prd-card">
+          <h3>选对 · 智能选礼</h3>
+          <p class="prd-p">输入「给谁 + 场景 + 预算 + 风格」，输出 N 个候选 + 推荐理由 + 雷区提示。</p>
+        </div>
+        <div class="prd-card">
+          <h3>说好 · 走心寄语</h3>
+          <p class="prd-p">按关系、场景生成话术，自动规避雷区，可一键复制。</p>
+        </div>
+        <div class="prd-card">
+          <h3>记住 · 日历记录</h3>
+          <p class="prd-p">日子提醒 + 送过的礼 + 对方反馈，形成记忆闭环，反哺下次推荐。</p>
+        </div>
+        <div class="prd-card">
+          <h3>礼尚往来 · 双向台账</h3>
+          <p class="prd-p">送出 / 收到双向快记，自动算「该回一份心意」的时机与分寸，耦合日历、为 TA 选礼、关系档案与心意贺卡。</p>
+        </div>
+        <div class="prd-card">
+          <h3>买对 · 跳转成交</h3>
+          <p class="prd-p">主路径跳小红书商城（种草心智契合），淘宝 / 京东为辅。</p>
+        </div>
+        <div class="prd-card">
+          <h3>随时问 · AI 参谋</h3>
+          <p class="prd-p">底部中凸 AI 入口，随时进入对话问「该送什么」，AI 结合关系档案给建议。</p>
+        </div>
+      </div>
+
+      <h3 style="margin:18px 0 6px">信息架构</h3>
+      <div class="prd-card">
+        <ul>
+          <li><b>一级导航（底部）</b>：首页 ｜ 发现 ｜ [AI 助手·中凸] ｜ 心愿 ｜ 我的</li>
+          <li><b>首页</b>：为 TA 送礼 Hero（礼物 emoji 占位，放大）+ 四个功能入口（人物关系 / 送礼日历 / 礼尚往来 / 心意贺卡）+ 惊喜盲盒入口 + 日期日历（内嵌「送礼日倒计时」整行卡片，左右自动滑动）</li>
+          <li><b>发现</b>：顶部搜索栏 → 分类导航（为谁挑 / 为何送左右切，分类可点进二级页）→ 活动 banner（自动轮播）→ 送礼攻略卡片（横滑）→ 礼物商城（双栏瀑布流）；分类二级页仅保留「搜索 / 攻略 / 商城」三模块</li>
+          <li><b>心愿</b>：心愿池（收藏礼物）+ 历史送过记录</li>
+          <li><b>我的</b>：关系与档案 / 提示与设置 / 帮助（含再次查看新手引导）</li>
+          <li><b>AI 助手</b>：底部中凸入口，进入即对话</li>
+          <li><b>选礼流</b>：选人 → 选场景 / 预算 / 风格 → 出方案 → 看礼物 → 生成寄语 → 跳转成交</li>
+          <li><b>礼物详情</b>：礼物信息 + 推荐理由 + 雷区 + 寄语 + 跳转按钮</li>
+          <li><b>新手引导</b>：首次进入分步教「添加人物 → 送礼推荐 → 节点提醒」，可跳过</li>
+        </ul>
+      </div>
+
+      <h3 style="margin:18px 0 6px">视觉策略</h3>
+      <div class="prd-card" style="margin-bottom:10px">
+        <h3 style="margin-bottom:6px">设计原则（大策略）</h3>
+        <ul>
+          <li><b>年轻化</b>：贴近 20~35 岁审美，轻快不油腻、不「爸妈风」，一眼有代际认同</li>
+          <li><b>艺术感</b>：有审美辨识度与记忆点，拒绝冷白货架感，让人一进就觉得「有品味」</li>
+          <li><b>温暖感</b>：送礼的情绪底色，暖而不腻、有拥抱感，而不是促销的躁</li>
+          <li><b>人情味</b>：有人味、有温度，是「用心准备」的气场，不是冷冰冰的机器推荐</li>
+        </ul>
+      </div>
+      <div class="prd-card">
+        <h3 style="margin-bottom:6px">落地抓手（具体策略）</h3>
+        <ul>
+          <li><b>颜色</b>：白底为主 + 正红品牌强调 + 浅黄/天蓝双辅助色，清爽中带热烈与信任
+            <div class="swatches" style="margin-top:6px">
+              <span class="swatch"><i style="background:#FFFFFF;border-color:#e8e4d8"></i>白底 #FFFFFF（主背景）</span>
+              <span class="swatch"><i style="background:#ee3c38"></i>正红 #ee3c38（品牌强调）</span>
+              <span class="swatch"><i style="background:#F7F5CD"></i>浅黄 #F7F5CD（辅助·暖）</span>
+              <span class="swatch"><i style="background:#50acff"></i>天蓝 #50acff（辅助·信任）</span>
+            </div>
+          </li>
+          <li><b>视觉风格</b>：柔和渐变 + 大圆角 + 留白呼吸，情绪化 emoji / 插画做情感占位</li>
+          <li><b>Icon 设计</b>：线条 + 面性结合、统一圆角与栅格，情感化微动效（节日彩蛋、礼物点亮）</li>
+          <li><b>卡片设计</b>：统一卡片规范——16px 圆角、1px 浅描边、统一留白；一张卡片只讲一件事，文字版式分三级（标题 15px / 正文 13px / 辅助 11px），层级清晰、点面可点</li>
+          <li><b>文案规范</b>：去掉口号与装饰性文字，卡片与文字只保留功能信息，简洁、可扫读</li>
+          <li><b>跳转方式</b>：卡片即入口，一键跳小红书商城（主）/ 淘宝京东（辅），不打断送礼情绪</li>
+          <li><b>内容结构</b>：移动端优先、单列滚动 + 宫格 + 横滑 + 瀑布流混排，契合单手使用</li>
+        </ul>
+      </div>
+
+      <!-- 07 AI 价值与作用 -->
+      <h2>07 · AI 价值与在产品中的作用</h2>
+      <p class="prd-p">AI 不是「搜索引擎」，是「懂关系的参谋」——四项能力分别落在四个功能模块上，是产品「懂人 → 选对 → 说好 → 记住」这条主线的发动机。</p>
+      <div class="prd-grid">
+        <div class="prd-card">
+          <h3>理解人</h3>
+          <p class="prd-p">落在「认识 TA · 关系档案」——解析收礼人画像（关系 / 兴趣 / 禁忌 / 预算），把零散信息结构化入档。</p>
+        </div>
+        <div class="prd-card">
+          <h3>推荐精准</h3>
+          <p class="prd-p">落在「选对 · 智能选礼」——由人出发给候选 + 理由 + 雷区；AI 管理解与解释，排序走规则引擎保证稳定不幻觉。</p>
+        </div>
+        <div class="prd-card">
+          <h3>表达情</h3>
+          <p class="prd-p">落在「说好 · 走心寄语」——按关系、场景生成有分寸的寄语与送礼理由，一键复制。</p>
+        </div>
+        <div class="prd-card">
+          <h3>记得住</h3>
+          <p class="prd-p">落在「记住 · 日历记录」——记忆日期、送过什么、对方反馈，主动提醒、反哺下次推荐。</p>
+        </div>
+        <div class="prd-card">
+          <h3>随时答</h3>
+          <p class="prd-p">落在底部「AI 参谋」对话——不打断主流程的轻量入口，结合关系档案即时回应「该送什么」。</p>
+        </div>
+      </div>
+      <p class="prd-note"><b>AI 的边界</b>：AI 管「理解 + 表达 + 解释」，不独占「排序」——推荐排序走规则引擎（可解释、不幻觉）；「买对 · 跳转成交」由电商承接，AI 不碰供应链与交易；不编造画像、不越关系分寸、合规硬截断。</p>
+
+      <!-- 08 关键取舍 -->
+      <h2>08 · 关键取舍</h2>
+      <div class="prd-grid">
+        <div class="prd-card">
+          <h3>纯推荐 · 不碰供应链</h3>
+          <p class="prd-p">成交跳转小红书商城（主）+ 淘宝 / 京东（辅），聚焦「选对」而非「卖货」。</p>
+        </div>
+        <div class="prd-card">
+          <h3>以人为中心</h3>
+          <p class="prd-p">核心路径 = 人 → 选礼，而非礼物 → 搜商品。</p>
+        </div>
+        <div class="prd-card">
+          <h3>规则引擎先行</h3>
+          <p class="prd-p">先可解释的规则推荐，跑顺了再上大模型。</p>
+        </div>
+        <div class="prd-card">
+          <h3>亲密 / 人情优先</h3>
+          <p class="prd-p">先服务亲密 / 人情关系，商务分群二期独立。</p>
+        </div>
+        <div class="prd-card">
+          <h3>数据先轻后重</h3>
+          <p class="prd-p">先用 mock / 黄页跑通体验，再逐步接真实商品与画像数据。</p>
+        </div>
+      </div>
+
+      <p class="prd-note">⚠️ 本 demo 为 STATIC_SITE 纯前端原型：推荐引擎为本地规则模拟，未接真实大模型、电商与用户数据；「行业信号」为公开趋势归纳，精确数值待引权威报告。</p>
+    </div>
+  </div>
+</div>
+
+<script src="app.js?v=95"></script>
+</body>
+</html>
